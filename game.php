@@ -37,7 +37,7 @@
                 this.y = this.y + yy;
             }
         }
-
+        //testcommit
         tasten = {};
         document.addEventListener('keydown', function(e) {
             tasten[e.keyCode || e.which] = true;
