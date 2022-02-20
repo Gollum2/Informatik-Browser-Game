@@ -10,7 +10,7 @@
     </style>
 </head>
 
-<body style="overflow:hidden" scroll="no">
+<body ><!--style="overflow:hidden" scroll="no"-->
     <p>paragraf</p>
     <?php
     session_start();
@@ -28,9 +28,6 @@
                 this.x = 0;
                 this.y = 0;
                 this.fieldcolor = farbcode;
-            }
-            gethtml() {
-                return "<p>feld</p>";
             }
             move(xx, yy) {
                 this.x = this.x + xx;
@@ -57,6 +54,8 @@
         let widthmargin = 0;
         let heightmargin = 0;
         let fieldsize = 100;
+        let coordsx = 0;
+        let coordsy = 0;
         //adapt shown tiles to window size at beginning and on resize event
         width = window.innerWidth;
         height = window.innerHeight;
@@ -76,8 +75,8 @@
             //console.log(newHeight);
             fieldcoutheight = parseInt((newHeight / fieldsize), 10);
             fieldcoutwidth = parseInt((newWidth / fieldsize), 10);
-            heightmargin = (newHeight - fieldcoutheight * fieldsize)/2;
-            widthmargin = (newWidth - fieldcoutwidth * fieldsize)/2;
+            heightmargin = (newHeight - fieldcoutheight * fieldsize) / 2;
+            widthmargin = (newWidth - fieldcoutwidth * fieldsize) / 2;
             if (fieldcoutheight % 2 == 0) {
                 fieldcoutheight -= 1;
                 heightmargin += fieldsize / 2;
@@ -95,13 +94,12 @@
                 for (var j = 0; j < fieldcoutwidth + 2; j++) {
                     let randoclor = '#' + Math.floor(Math.random() * 16777215).toString(16); //random color
                     let fff;
-                    if((fieldcoutheight+1)/2==i && (fieldcoutwidth+1)/2==j){
-                        console.log("mitte bei "+i+" "+j);
+                    if ((fieldcoutheight + 1) / 2 == i && (fieldcoutwidth + 1) / 2 == j) {
+                        console.log("mitte bei " + i + " " + j);
                         fff = new feld("#000000");
-                    }else{
+                    } else {
                         fff = new feld(randoclor);
                     }
-                    
                     fff.x = j;
                     fff.y = i;
                     temp2.push(fff);
@@ -114,8 +112,6 @@
             });*/
             allefelder = temp;
             let test = document.getElementById("maindiv");
-            console.log(widthmargin+" ###"+fieldsize+"--- "+newWidth);
-            console.log(heightmargin+" "+fieldsize+" "+newHeight);
             test.innerHTML = "";
             for (var i = 0; i < (fieldcoutheight + 2); i++) {
                 for (var j = 0; j < (fieldcoutwidth + 2); j++) {
@@ -132,22 +128,30 @@
                     test.appendChild(temp);
                 }
             }
-            $("#maindiv").css("left",(widthmargin + "px"));
-            $("#maindiv").css("top",(heightmargin + "px"));
+            test.style.left = -(fieldsize-widthmargin) + "px";
+            test.style.top = -(fieldsize-heightmargin) + "px";
+            coordsx = document.getElementById("maindiv").style.left;
+            coordsy = document.getElementById("maindiv").style.top;
+            /*
+            console.log(coordsx);
+            console.log(coordsy + " fffffffffffffffffffffffffffffff");
+            coordsx = coordsx.replace("px", "");
+            coordsy = coordsy.replace("px", "");
+            console.log(coordsx);
+            console.log(coordsy + " fffffff");
+            */
         });
 
 
 
         let speed = 5;
-        let coordsx = 0;
-        let coordsy = 0;
 
         function gameloop() {
             //console.log("---");
             let vertikal = 0;
             let horizonzal = 0;
             if (tasten[87] == true) {
-              //  console.log("WWWWWWWWW");
+                //  console.log("WWWWWWWWW");
                 vertikal -= speed;
             }
             if (tasten[65] == true) {
@@ -162,16 +166,20 @@
                 //console.log("DDDDDDDD");
                 horizonzal += speed;
             }
-            coordsx += horizonzal;
-            coordsy += vertikal;
+
+
+
+            coordsx =parseInt(coordsx)+ horizonzal;
+            coordsy =parseInt(coordsy)+ vertikal;
 
             //let top = parseInt(parseInt(test.style.top.replace("px", "")) + vertikal) + "px"
             //let left = parseInt(parseInt(test.style.left.replace("px", "")) + horizonzal) + "px";
-            
-            //console.log(coordsx);
-            //console.log(coordsy);
-            $("#maindiv").css("left",(coordsx + "px"));
-            $("#maindiv").css("top",(coordsy + "px"));
+
+            console.log(coordsx);
+            console.log(coordsy);
+
+            $("#maindiv").css("left", (coordsx + "px"));
+            $("#maindiv").css("top", (coordsy + "px"));
             setTimeout(gameloop, 10); //update intervall in ms
         }
         gameloop();
