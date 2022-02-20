@@ -10,7 +10,8 @@
     </style>
 </head>
 
-<body ><!--style="overflow:hidden" scroll="no"-->
+<body style="overflow:hidden" scroll="no">
+    <!--style="overflow:hidden" scroll="no"-->
     <p>paragraf</p>
     <?php
     session_start();
@@ -22,7 +23,6 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <!--<script src=script.js></script>-->
     <script>
-        console.log("fffffffffffffffffffff");
         class feld {
             constructor(farbcode) {
                 this.x = 0;
@@ -34,41 +34,8 @@
                 this.y = this.y + yy;
             }
         }
-        //testcommit
-        tasten = {};
-        document.addEventListener('keydown', function(e) {
-            tasten[e.keyCode || e.which] = true;
-        }, true);
-        document.addEventListener('keyup', function(e) {
-            tasten[e.keyCode || e.which] = false;
-        }, true);
-
-        let allefelder = [];
-        console.log(allefelder);
-        allefelder.push([]);
-        console.log(allefelder);
-        let width = 0;
-        let height = 0;
-        let fieldcoutheight = 0;
-        let fieldcoutwidth = 0;
-        let widthmargin = 0;
-        let heightmargin = 0;
-        let fieldsize = 100;
-        let coordsx = 0;
-        let coordsy = 0;
-        //adapt shown tiles to window size at beginning and on resize event
-        width = window.innerWidth;
-        height = window.innerHeight;
-        console.log(height);
-        fieldcoutheight = parseInt((height / fieldsize), 10);
-        fieldcoutwidth = parseInt((width / fieldsize), 10);
-        heightmargin = height - fieldcoutheight * fieldsize;
-        widthmargin = width - fieldcoutwidth * fieldsize;
-        console.log(fieldcoutheight);
-        console.log(fieldcoutwidth);
-        console.log("fehler");
-
-        window.addEventListener('resize', function(event) {
+        
+        function setup() {
             console.log("resize");
             var newWidth = window.innerWidth;
             var newHeight = window.innerHeight;
@@ -95,7 +62,7 @@
                     let randoclor = '#' + Math.floor(Math.random() * 16777215).toString(16); //random color
                     let fff;
                     if ((fieldcoutheight + 1) / 2 == i && (fieldcoutwidth + 1) / 2 == j) {
-                        console.log("mitte bei " + i + " " + j);
+                        //console.log("mitte bei " + i + " " + j);
                         fff = new feld("#000000");
                     } else {
                         fff = new feld(randoclor);
@@ -106,7 +73,7 @@
                 }
                 temp.push(temp2);
             }
-            console.log(temp);
+            //console.log(temp);
             /*temp.forEach(element => {
                 console.log(JSON.stringify(element));
             });*/
@@ -117,6 +84,7 @@
                 for (var j = 0; j < (fieldcoutwidth + 2); j++) {
                     let temp = document.createElement("div");
                     temp.className = "feld";
+                    temp.setAttribute("class", "feld");
                     temp.style.position = "absolute";
                     //console.log(i + " -- " + j);
                     //console.log(allefelder[i][j].x * fieldsize);
@@ -128,8 +96,8 @@
                     test.appendChild(temp);
                 }
             }
-            test.style.left = -(fieldsize-widthmargin) + "px";
-            test.style.top = -(fieldsize-heightmargin) + "px";
+            test.style.left = -(fieldsize - widthmargin) + "px";
+            test.style.top = -(fieldsize - heightmargin) + "px";
             coordsx = document.getElementById("maindiv").style.left;
             coordsy = document.getElementById("maindiv").style.top;
             /*
@@ -140,10 +108,47 @@
             console.log(coordsx);
             console.log(coordsy + " fffffff");
             */
+            $(".feld").on("mouseover", function() {
+                console.log("mouseonfield");
+                $(this).css("border", "1px solid black")
+            });
+            $(".feld").on("mouseout", function() {
+                console.log("mouseonfield");
+                $(this).css("border", "none")
+            });
+        }
+        console.log("scritp start");
+
+        var allefelder = [];
+        allefelder.push([]);
+        var width = 0;
+        var height = 0;
+        var fieldcoutheight = 0;
+        var fieldcoutwidth = 0;
+        var widthmargin = 0;
+        var heightmargin = 0;
+        var fieldsize = 100;
+        var coordsx = 0;
+        var coordsy = 0;
+        var tasten = {};
+
+        document.addEventListener('keydown', function(e) {
+            tasten[e.keyCode || e.which] = true;
+        }, true);
+        document.addEventListener('keyup', function(e) {
+            tasten[e.keyCode || e.which] = false;
+        }, true);
+        
+        document.addEventListener("scroll", function(e) {
+            //onscroll 
+            //fieldsize = (int)(fieldsize * 0.8)
+            console.log("gescrollt");
+
+        }, true);
+        setup();
+        window.addEventListener('resize', function(event) {
+            setup();
         });
-
-
-
         let speed = 5;
 
         function gameloop() {
@@ -169,29 +174,20 @@
 
 
 
-            coordsx =parseInt(coordsx)+ horizonzal;
-            coordsy =parseInt(coordsy)+ vertikal;
+            coordsx = parseInt(coordsx) + horizonzal;
+            coordsy = parseInt(coordsy) + vertikal;
 
             //let top = parseInt(parseInt(test.style.top.replace("px", "")) + vertikal) + "px"
             //let left = parseInt(parseInt(test.style.left.replace("px", "")) + horizonzal) + "px";
 
-            console.log(coordsx);
-            console.log(coordsy);
+            //console.log(coordsx);
+            //console.log(coordsy);
 
             $("#maindiv").css("left", (coordsx + "px"));
             $("#maindiv").css("top", (coordsy + "px"));
             setTimeout(gameloop, 10); //update intervall in ms
         }
         gameloop();
-
-        $(".feld").on("mouseover", function() {
-            console.log("mouseonfield");
-            $(this).css("border", "1px solid black")
-        });
-        $(".feld").on("mouseout", function() {
-            console.log("mouseonfield");
-            $(this).css("border", "none")
-        });
     </script>
 </body>
 
