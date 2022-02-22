@@ -87,7 +87,7 @@
             if ($erg[2] == $pass) {
                 $_SESSION["id"] = $erg[0];
                 //print_r($randomString);
-                header("Location: http://localhost:81/game.php?");
+                header("Location: /game.php?");
                 exit;
             }
             $usernamestring = $username;
