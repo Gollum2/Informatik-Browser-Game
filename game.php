@@ -71,6 +71,9 @@
                 loadchunk(invchunk[i][0], invchunk[i][1]);
             }
             console.log("-------------------------------------");
+            setTimeout(function(){
+                console.log(tilemap);
+            },2000);
         }
 
         function draw() {
@@ -82,14 +85,20 @@
                     //console.log(tilemap);
                     //console.log(tilemap[topborder + i][leftborder + j].color + " color");
                     fill(tilemap[topborder + i][leftborder + j].color);
+                    stroke(tilemap[topborder + i][leftborder + j].color);
                     //print(j * (fieldsize) + leftofsett);
                     //fill("#ff00ff")
                     if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
-                        fill("#ff0000");
+                        fill("#00ff00");
+                        console.log((leftborder + j)+" -- "+(topborder + i));   
                     }
                     rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
-                    textSize(320);
-                    text(tilemap.value,j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett);
+                    textSize(15);
+                    fill("#ffffff");
+                    //console.log();
+                    
+                    text((tilemap[topborder + i][leftborder + j].value).toFixed(2)+" " +(leftborder + j)+" -- " +(topborder + i),
+                    j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett);
                 }
             }
         }
