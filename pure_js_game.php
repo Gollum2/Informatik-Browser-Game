@@ -53,6 +53,7 @@
 
         function setup() {
             c = createCanvas(width, height);
+            noiseSeed(masterseed);
             //console.log(getchunk(42, 0, 0));
             //loadchunk(0, 0);
             //noLoop();
@@ -84,27 +85,23 @@
                     //console.log((topborder + i)+" "+(leftborder + j));
                     //console.log(tilemap);
                     //console.log(tilemap[topborder + i][leftborder + j]);
-                    try {
-                        fill(tilemap[topborder + i][leftborder + j].color);
-                        stroke(tilemap[topborder + i][leftborder + j].color);
 
-                        //print(j * (fieldsize) + leftofsett);
-                        //fill("#ff00ff")
-                        if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
-                            fill("#00ff00");
-                            console.log((leftborder + j) + " -- " + (topborder + i));
-                        }
-                        rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
-                        textSize(15);
-                        fill("#ffffff");
-                        //console.log();
+                    fill(tilemap[topborder + i][leftborder + j].color);
+                    stroke(tilemap[topborder + i][leftborder + j].color);
 
-                        text((tilemap[topborder + i][leftborder + j].value).toFixed(2) + " " + (leftborder + j) + " -- " + (topborder + i),
-                            j * (fieldsize) + leftofsett, (i + 1) * (fieldsize) + topofsett);
-                    } catch (error) {
-                        console.log("thing not found");
-                        console.log(error);
+                    //print(j * (fieldsize) + leftofsett);
+                    //fill("#ff00ff")
+                    if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
+                        fill("#00ff00");
+                        console.log((leftborder + j) + " -- " + (topborder + i));
                     }
+                    rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
+                    textSize(15);
+                    fill("#ffffff");
+                    //console.log();
+
+                    text((tilemap[topborder + i][leftborder + j].value).toFixed(2) + " " + (leftborder + j) + " -- " + (topborder + i),
+                        j * (fieldsize) + leftofsett, (i + 1) * (fieldsize) + topofsett);
                 }
             }
         }
@@ -151,61 +148,7 @@
             }
             //print("adapt function" + leftofsett + " " + fieldcountwidth);
 
-        }
-
-        async function loaddinger(seed, cx, cy) {
-            //console.log("very funny");
-            url = 'http://localhost:4444/chunk/' + seed + "/" + cx + "/" + cy;
-            //console.log(url);
-            try {
-                const response = await fetch(url);
-                myJson = await response.json(); //extract JSON from the http response
-                //console.log(myJson.className);
-                return myJson;
-            } catch (err) {
-                remove();
-                let a = document.getElementById("errcode");
-                a.innerHTML = "server not reachable";
-                throw new Error("server not reachable");
-                process.exit();
-            }
-        }
-
-        function getchunk(seed, cx, cy) {
-            let ttt = null;
-            //console.log("ouput is funny");
-            var prom = new Promise(function(resolve, reject) {
-                try {
-
-                    resolve(loaddinger(seed, cx, cy));
-                } catch (err) {
-                    reject("error loading chunk");
-                }
-            });
-            prom.then(function(result) {
-                console.log("chunk " + cx + "/" + cy + " arrived");
-                console.log(result);
-                loadedchunks.push(result);
-                let ccy = 0;
-                for (let i = cy * 8; i < (cy + 1) * 8; i++, ccy++) {
-                    //todo memory usage can be shity because 
-                    //i set array at certain values and it fills al the oters
-                    //console.log("in der for schelife");
-                    let ccx = 0;
-                    //console.log(Array.isArray(tilemap[i]));
-                    if (Array.isArray(tilemap[i]) == false) {
-                        tilemap[i] = [];
-                        print("array hinzugefugt")
-                    }
-                    for (let j = cx * 8; j < (cx + 1) * 8; j++, ccx++) {
-                        //console.log(i+" "+j+" is a known coordinate");
-                        tilemap[i][j] = result.tile[ccy][ccx];
-                    }
-                }
-            }, function(err) {
-                console.log(err);
-            });
-        }
+        }        
 
         function keyPressed() {
             console.log(key + " wurde gedruckt"); //keypressed things
@@ -220,14 +163,16 @@
                 moveup();
             }
             if (key == "a") {
-                moverleft();
+                moveleft();
             }
 
         }
-        function removeunusedchunks(){
-            
+
+        function removeunusedchunks() {
+
         }
-        function moverleft() {
+
+        function moveleft() {
             let invchunk = involvedchunks();
             let erg = [];
             let rightchunk = floor((xxx - (floor(fieldcountwidth / 2) + 3)) / chunksize);
@@ -350,7 +295,34 @@
         function loadchunk(cx, cy) {
             let ccc = null;
             let lol = 0;
-            //console.log("tstadfasdfa");
+            let ccy = 0;
+            for (let i = cy * 8; i < (cy + 1) * 8; i++, ccy++) {
+                //todo memory usage can be shity because 
+                //i set array at certain values and it fills al the oters
+                let ccx = 0;
+                if (Array.isArray(tilemap[i]) == false) {
+                    tilemap[i] = [];
+                }
+                for (let j = cx * 8; j < (cx + 1) * 8; j++, ccx++) {
+                    //console.log(i+" "+j+" is a known coordinate");
+                    let t = new Tile();
+                    t.value = noise(x, y);
+                    h = parseInt((t.value) * 250, 10).toString(16)
+                    t.posx = j;
+                    t.posy = i;
+                    t.type = "generated";
+                    if (0.1 < t.value && t.value < 0.2) {
+                        t.color = "#" + h.padStart(6, "0");
+                    } else {
+                        h = h + "00";
+                        h = h.padStart(6, "0")
+                        t.color = "#" + h;
+                    }
+
+                    tilemap[i][j] = t;
+                }
+            }
+            /*//console.log("tstadfasdfa");
             for (let i = cy * 8; i < (cy + 1) * 8; i++) {
                 //todo memory usage can be shity because 
                 //i set array at certain values and it fills al the oters
@@ -392,7 +364,7 @@
             if (ccc == null) {
                 getchunk(masterseed, cx, cy)
                 console.log("chunk not found");
-            }
+            }*/
             print(tilemap);
         }
 
