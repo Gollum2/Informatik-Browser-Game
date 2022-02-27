@@ -12,7 +12,7 @@
 
 <body style="overflow:hidden" scroll="no">
     <!--style="overflow:hidden" scroll="no"-->
-    <p>paragraf</p>
+    <p id="errcode">---</p>
     <?php
     session_start();
     //echo ("<p>" . $_SESSION["pass"] . " - " . $_SESSION["id"] . " - " . $_SESSION["user"] . "</p>");
@@ -59,10 +59,10 @@
             console.log(tilemap);
             c.position(0, 0);
             stroke(255); // Set line drawing color to white
-            frameRate(5);
-            print("test1");
+            frameRate(3);
+            //print("test1");
             adaptsizes(width, height);
-            background("#808080");
+            background("#202020");
             let invchunk = involvedchunks();
             console.log(invchunk);
             console.log(invchunk.length);
@@ -71,9 +71,9 @@
                 loadchunk(invchunk[i][0], invchunk[i][1]);
             }
             console.log("-------------------------------------");
-            setTimeout(function(){
+            setTimeout(function() {
                 console.log(tilemap);
-            },2000);
+            }, 2000);
         }
 
         function draw() {
@@ -83,22 +83,22 @@
                 for (let j = -1; j < fieldcountwidth + 1; j++) {
                     //console.log((topborder + i)+" "+(leftborder + j));
                     //console.log(tilemap);
-                    //console.log(tilemap[topborder + i][leftborder + j].color + " color");
+                    //console.log(tilemap[topborder + i][leftborder + j]);
                     fill(tilemap[topborder + i][leftborder + j].color);
                     stroke(tilemap[topborder + i][leftborder + j].color);
                     //print(j * (fieldsize) + leftofsett);
                     //fill("#ff00ff")
                     if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
                         fill("#00ff00");
-                        console.log((leftborder + j)+" -- "+(topborder + i));   
+                        console.log((leftborder + j) + " -- " + (topborder + i));
                     }
                     rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
                     textSize(15);
                     fill("#ffffff");
                     //console.log();
-                    
-                    text((tilemap[topborder + i][leftborder + j].value).toFixed(2)+" " +(leftborder + j)+" -- " +(topborder + i),
-                    j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett);
+
+                    text((tilemap[topborder + i][leftborder + j].value).toFixed(2) + " " + (leftborder + j) + " -- " + (topborder + i),
+                        j * (fieldsize) + leftofsett, (i + 1) * (fieldsize) + topofsett);
                 }
             }
         }
@@ -111,37 +111,24 @@
             return hash.hasOwnProperty(val);
         }
 
-        function involvedchunks() {
-            erg = [];
-            print(xxx + " " + yyy + " " + fieldcountwidth + " " + fieldcountheight + " involvedchungs");
-            leftborder = xxx - ceil(fieldcountwidth / 2);
-            topborder = yyy - ceil(fieldcountheight / 2);
-            rightborder = xxx + ceil(fieldcountwidth / 2);
-            bottomborder = yyy + ceil(fieldcountheight / 2);
-            print(leftborder + " " + rightborder + " " + topborder + " " + bottomborder + " da lfjal");
-            for (i = topborder; i <= bottomborder; i += 5) { //check distanz einstellen 5
-                for (j = leftborder; j <= rightborder; j += 5) {
-                    let cpy = floor(i / chunksize);
-                    let cpx = floor(j / chunksize);
-                    if (erg.containsArray([cpx, cpy]) == false) {
-                        erg.push([cpx, cpy]);
-                    }
-                }
-            }
-
-            return erg;
-
-        }
-
         function windowResized() {
+            //tilemap=[];
             resizeCanvas(windowWidth, windowHeight);
             adaptsizes(windowWidth, windowHeight);
+            let invchunk = involvedchunks();
+            console.log(invchunk);
+            console.log(invchunk.length + " count involved chunks");
+            for (let i = 0; i < invchunk.length; i++) {
+                print(i + " i");
+                loadchunk(invchunk[i][0], invchunk[i][1]);
+            }
+            console.log(tilemap);
+            console.log("tsefasdlfjaslöd");
         }
 
         function mouseWheel(event) {
             print("event.delta");
         }
-
 
         function adaptsizes(width, height) {
             fieldcountwidth = round(width / fieldsize);
@@ -157,31 +144,25 @@
                 leftofsett = round(leftofsett + fieldsize / 2);
             }
             //print("adapt function" + leftofsett + " " + fieldcountwidth);
-            tilemap = [];
-            for (let i = 0; i < fieldcountheight; i++) {
-                let temp = []
-                for (let j = 0; j < fieldcountwidth; j++) {
-                    t = new Tile;
-                    r = random(0, 255);
-                    g = random(0, 255);
-                    b = random(0, 255);
-                    col = "#" + hex(r, 2) + "" + hex(g, 2) + "" + hex(b, 2);
-                    t.color = col;
-                    //      print(t.color);
-                    temp.push(t);
-                }
-                tilemap.push(temp);
-            }
+
         }
 
         async function loaddinger(seed, cx, cy) {
             //console.log("very funny");
             url = 'http://localhost:4444/chunk/' + seed + "/" + cx + "/" + cy;
             //console.log(url);
-            const response = await fetch(url);
-            myJson = await response.json(); //extract JSON from the http response
-            //console.log(myJson.className);
-            return myJson;
+            try {
+                const response = await fetch(url);
+                myJson = await response.json(); //extract JSON from the http response
+                //console.log(myJson.className);
+                return myJson;
+            } catch (err) {
+                remove();
+                let a = document.getElementById("errcode");
+                a.innerHTML = "server not reachable";
+                throw new Error("server not reachable");
+                process.exit();
+            }
         }
 
         function getchunk(seed, cx, cy) {
@@ -189,8 +170,9 @@
             //console.log("ouput is funny");
             var prom = new Promise(function(resolve, reject) {
                 try {
+
                     resolve(loaddinger(seed, cx, cy));
-                } catch {
+                } catch (err) {
                     reject("error loading chunk");
                 }
             });
@@ -219,6 +201,43 @@
             });
         }
 
+        function keyPressed() {
+            console.log(key + " wurde gedruckt"); //keypressed things
+            if (key == "d") {
+                console.log("ffffffffffffffff");
+                moveright();
+            }
+        }
+
+        function moveright() {
+            let invchunk = involvedchunks();
+            let erg=[];
+            let rightchunk = floor((xxx + (floor(fieldcountwidth / 2) + 3))/chunksize);
+            console.log(invchunk);
+            console.log([rightchunk, invchunk[0][1]]);
+            if (invchunk.containsArray([rightchunk, invchunk[0][1]])) {
+                console.log("chunk is already loaded no need for more before moving right");
+            } else {
+                let topborder = yyy - ceil(fieldcountheight / 2);
+                let bottomborder = yyy + ceil(fieldcountheight / 2);
+                for (let j = topborder; j <= bottomborder; j += 7) {
+                    let cpy = floor(j / chunksize);
+                    if (erg.containsArray([rightchunk, cpy]) == false) {
+                        erg.push([rightchunk, cpy]);
+                    }
+                }
+                if (erg.containsArray([rightchunk, (bottomborder/chunksize)]) == false) {
+                    erg.push([rightchunk, floor((bottomborder/chunksize))]);
+                }
+                console.log("########################");
+                console.log(erg);
+                for (let i = 0; i < erg.length; i++) {
+                    loadchunk(erg[i][0],erg[i][1]);
+                }
+            }
+            xxx++;
+        }
+
         function loadchunk(cx, cy) {
             let ccc = null;
             let lol = 0;
@@ -245,6 +264,19 @@
                 if (loadedchunks[i].chunkposx == cx && loadedchunks[i].chunkposy == cy) {
                     ccc = loadedchunks[i];
                     console.log("chunk already stored no need to get it");
+                    let ccy = 0;
+                    for (let i = cy * 8; i < (cy + 1) * 8; i++, ccy++) {
+                        //todo memory usage can be shity because 
+                        //i set array at certain values and it fills al the oters
+                        let ccx = 0;
+                        if (Array.isArray(tilemap[i]) == false) {
+                            tilemap[i] = [];
+                        }
+                        for (let j = cx * 8; j < (cx + 1) * 8; j++, ccx++) {
+                            //console.log(i+" "+j+" is a known coordinate");
+                            tilemap[i][j] = ccc.tile[ccy][ccx];
+                        }
+                    }
                     break;
                 }
             }
@@ -253,25 +285,37 @@
                 console.log("chunk not found");
             }
             print(tilemap);
-            /*
-            lol=0;
-            while (ccc == null) {
-                console.log("in der while");
-                
-            }
-            let ccy = 0;
-            for (let i = cy * 8; i < (cy + 1) * 8; i++,ccy++) {
-                //todo memory usage can be shity because 
-                //i set array at certain values and it fills al the oters
-                console.log("in der for schelife");
-                let ccx = 0;
-                tilemap[i] = [];
-                for (let j = cx * 8; j < (cx + 1) * 8; j++, ccx++) {
-                    tilemap[i][j] = ccc.tile[ccy][ccy];
+        }
+
+        function chunkoftile(x, y) {
+            let a = floor(x / chunksize);
+            let b = floor(y / chunksize);
+            return [a, b];
+        }
+
+        function involvedchunks() {
+            erg = [];
+            //print(xxx + " " + yyy + " " + fieldcountwidth + " " + fieldcountheight + " involvedchungs");
+            let leftborder = xxx - ceil(fieldcountwidth / 2);
+            let topborder = yyy - ceil(fieldcountheight / 2);
+            let rightborder = xxx + ceil(fieldcountwidth / 2);
+            let bottomborder = yyy + ceil(fieldcountheight / 2);
+            //print(leftborder + " " + rightborder + " " + topborder + " " + bottomborder + " da lfjal");
+            for (let i = topborder - 1; i <= bottomborder + 1; i += 7) { //todo check distanz einstellen 
+                for (let j = leftborder - 1; j <= rightborder + 1; j += 7) {
+                    let cpy = floor(i / chunksize);
+                    let cpx = floor(j / chunksize);
+                    if (erg.containsArray([cpx, cpy]) == false) {
+                        erg.push([cpx, cpy]);
+                    }
                 }
             }
-            console.log(tilemap);
-            */
+            let cpy = floor(bottomborder / chunksize);
+            let cpx = floor(rightborder / chunksize);
+            if (erg.containsArray([cpx, cpy]) == false) {
+                erg.push([cpx, cpy]);
+            }
+            return erg;
         }
     </script>
     <?php
