@@ -1,11 +1,11 @@
-div.center{
+div.center {
     background-color: lightgray;
-    margin:auto;
-    border:1px solid white;
-    width:50%;
-    left:25%;
-    position:absolute;
-    text-align:center;
+    margin: auto;
+    border: 1px solid white;
+    width: 50%;
+    left: 25%;
+    position: absolute;
+    text-align: center;
 }
 
 .feld {
@@ -13,4 +13,130 @@ div.center{
     width: 100px;
     height: 100px;
     position: absolute;
+}
+
+div.settings {
+    background-color: rgba(150, 150, 150, 0.75);
+    position: fixed;
+    top: 5%;
+    left: 25%;
+    width: 50%;
+    height: 90%;
+    display: none;
+}
+
+div.craftmenu {
+    background-color: rgba(150, 150, 150);
+    position: fixed;
+    top: 5%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    display: none;
+}
+
+.itemu1 {
+    grid-area: u1;
+}
+
+.itemu2 {
+    grid-area: u2;
+}
+
+.itemu3 {
+    grid-area: u3;
+}
+
+.itemu4 {
+    grid-area: u4;
+}
+
+.itemu5 {
+    grid-area: u5;
+}
+
+.itemu6 {
+    grid-area: u6;
+}
+
+.itemu7 {
+    grid-area: u7;
+}
+
+.itemu8 {
+    grid-area: u8;
+}
+
+.itemu9 {
+    grid-area: u9;
+}
+
+.itemu10 {
+    grid-area: u10;
+}
+
+.itemd1 {
+    grid-area: d1;
+}
+
+.itemd2 {
+    grid-area: d2;
+}
+
+.itemd3 {
+    grid-area: d3;
+}
+
+.itemd4 {
+    grid-area: d4;
+}
+
+.itemd5 {
+    grid-area: d5;
+}
+
+.itemd6 {
+    grid-area: d6;
+}
+
+.itemd7 {
+    grid-area: d7;
+}
+
+.itemd8 {
+    grid-area: d8;
+}
+
+.itemd9 {
+    grid-area: d9;
+}
+
+.itemd10 {
+    grid-area: d10;
+}
+
+div.taskbar {
+    background-color: rgba(150, 150, 150);
+    position: fixed;
+    bottom: 2%;
+    left: 35%;
+    width: 30%;
+    aspect-ratio: 10/2;
+    display: grid;
+    grid-template-areas:
+        'u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'
+        'd1 d2 d3 d4 d5 d6 d7 d8 d9 d10';
+    gap: 10px;
+    padding: 10px;
+}
+
+div.taskbar>div {
+    background-color: rgb(100, 100, 100);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+}
+div.taskbar>div:hover{
+    box-shadow:inset 0px 0px 0px 10px #333333;
+    background-color: rgb(140,140,140);
 }

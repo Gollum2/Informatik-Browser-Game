@@ -12,15 +12,45 @@
 
 <body style="overflow:hidden" scroll="no">
     <!--style="overflow:hidden" scroll="no"-->
-    <p id="errcode">---</p>
+
+    <div style="z-index: 10;">
+        <h1 style="position:fixed;top: 10px;left: 10px;">Test</h1>
+        <div id="settings" class="settings">settings</div>
+        <div id="craftmenu" class="craftmenu">craftmenu
+        </div>
+        <div id="taskbar" class="taskbar">
+            <div class="itemu1">u1</div>
+            <div class="itemu2">u2</div>
+            <div class="itemu3">u3</div>
+            <div class="itemu4">u4</div>
+            <div class="itemu5">u5</div>
+            <div class="itemu6">u6</div>
+            <div class="itemu7">u7</div>
+            <div class="itemu8">u8</div>
+            <div class="itemu9">u9</div>
+            <div class="itemu10">u10</div>
+            <div class="itemd1">d1</div>
+            <div class="itemd2">d2</div>
+            <div class="itemd3">d3</div>
+            <div class="itemd4">d4</div>
+            <div class="itemd5">d5</div>
+            <div class="itemd6">d6</div>
+            <div class="itemd7">d7</div>
+            <div class="itemd8">d8</div>
+            <div class="itemd9">d9</div>
+            <div class="itemd10">d10</div>
+        </div>
+    </div>
     <?php
     session_start();
     //echo ("<p>" . $_SESSION["pass"] . " - " . $_SESSION["id"] . " - " . $_SESSION["user"] . "</p>");
     ?>
     <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
     <!--<script src=script.js></script>-->
+
     <script src="p5/p5.js"></script>
     <script>
+        let inventory = [];
         let width = window.innerWidth;
         let height = window.innerHeight;
         var xxx = 0;
@@ -50,12 +80,18 @@
             chunkposx;
             chnnkposy;
         }
+        class Thing {
+
+        }
 
         function setup() {
             c = createCanvas(width, height);
             //console.log(getchunk(42, 0, 0));
             //loadchunk(0, 0);
             //noLoop();
+            document.getElementById("craftmenu").style.display = "none";
+            document.getElementById("settings").style.display = "none";
+            c.style('z-index', -10);
             console.log(tilemap);
             c.position(0, 0);
             stroke(255); // Set line drawing color to white
@@ -222,11 +258,32 @@
             if (key == "a") {
                 moverleft();
             }
+            if (key == "q") {
+                var x = document.getElementById("craftmenu");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+            }
+            if (keyCode === ESCAPE) {
+                console.log("settingsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+                var x = document.getElementById("settings");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+            }
+            if (keyCode === 113) { //F2 key is pressed
+                fillVal = 255;
+            }
+        }
+
+        function removeunusedchunks() {
 
         }
-        function removeunusedchunks(){
-            
-        }
+
         function moverleft() {
             let invchunk = involvedchunks();
             let erg = [];
@@ -427,6 +484,7 @@
             return erg;
         }
     </script>
+
     <?php
     //todo get seed and update it
     //echo "<script>seed=".wert."</script>

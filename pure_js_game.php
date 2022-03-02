@@ -12,13 +12,14 @@
 
 <body style="overflow:hidden" scroll="no">
     <!--style="overflow:hidden" scroll="no"-->
-    <p id="errcode">---</p>
+    <p id="errcode">--dfasdfadsf-</p>
     <?php
     session_start();
     //echo ("<p>" . $_SESSION["pass"] . " - " . $_SESSION["id"] . " - " . $_SESSION["user"] . "</p>");
     ?>
     <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
     <!--<script src=script.js></script>-->
+    <div>
     <script src="p5/p5.js"></script>
     <script>
         let width = window.innerWidth;
@@ -85,23 +86,27 @@
                     //console.log((topborder + i)+" "+(leftborder + j));
                     //console.log(tilemap);
                     //console.log(tilemap[topborder + i][leftborder + j]);
+                    try {
+                        fill(tilemap[topborder + i][leftborder + j].color);
+                        stroke(tilemap[topborder + i][leftborder + j].color);
 
-                    fill(tilemap[topborder + i][leftborder + j].color);
-                    stroke(tilemap[topborder + i][leftborder + j].color);
+                        //print(j * (fieldsize) + leftofsett);
+                        //fill("#ff00ff")
+                        if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
+                            fill("#00ff00");
+                            console.log((leftborder + j) + " -- " + (topborder + i));
+                        }
+                        rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
+                        textSize(15);
+                        fill("#ffffff");
+                        //console.log();
 
-                    //print(j * (fieldsize) + leftofsett);
-                    //fill("#ff00ff")
-                    if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
-                        fill("#00ff00");
-                        console.log((leftborder + j) + " -- " + (topborder + i));
+                        text((tilemap[topborder + i][leftborder + j].value).toFixed(2) + " " +
+                            tilemap[topborder + i][leftborder + j].posx + " -- " + (tilemap[topborder + i][leftborder + j].posy),
+                            j * (fieldsize) + leftofsett, (i + 1) * (fieldsize) + topofsett);
+                    } catch (error) {
+                        console.log(error);
                     }
-                    rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
-                    textSize(15);
-                    fill("#ffffff");
-                    //console.log();
-
-                    text((tilemap[topborder + i][leftborder + j].value).toFixed(2) + " " + (leftborder + j) + " -- " + (topborder + i),
-                        j * (fieldsize) + leftofsett, (i + 1) * (fieldsize) + topofsett);
                 }
             }
         }
@@ -148,7 +153,7 @@
             }
             //print("adapt function" + leftofsett + " " + fieldcountwidth);
 
-        }        
+        }
 
         function keyPressed() {
             console.log(key + " wurde gedruckt"); //keypressed things
@@ -165,9 +170,11 @@
             if (key == "a") {
                 moveleft();
             }
-
+            if(keyCode===ESCAPE){
+                console.log("settings");
+            }
         }
-
+        
         function removeunusedchunks() {
 
         }
@@ -296,17 +303,18 @@
             let ccc = null;
             let lol = 0;
             let ccy = 0;
-            for (let i = cy * 8; i < (cy + 1) * 8; i++, ccy++) {
-                //todo memory usage can be shity because 
-                //i set array at certain values and it fills al the oters
+            for (let i = cy * 8; i < (cy + 1) * 8; i++) {
                 let ccx = 0;
                 if (Array.isArray(tilemap[i]) == false) {
                     tilemap[i] = [];
                 }
-                for (let j = cx * 8; j < (cx + 1) * 8; j++, ccx++) {
+                for (let j = cx * 8; j < (cx + 1) * 8; j++) {
                     //console.log(i+" "+j+" is a known coordinate");
                     let t = new Tile();
-                    t.value = noise(x, y);
+                    t.value = noise(i / 8, j / 8);
+                    if(i==1){
+                    console.log(t.value + " uwu" + i/8 + " --- " + j/8);
+                    }
                     h = parseInt((t.value) * 250, 10).toString(16)
                     t.posx = j;
                     t.posy = i;
@@ -399,6 +407,10 @@
             return erg;
         }
     </script>
+    </div>
+    <div>
+    <h1 style="position:fixed;top: 10px;left: 10px;"    >Test</h1>
+    </div>
     <?php
     //todo get seed and update it
     //echo "<script>seed=".wert."</script>
