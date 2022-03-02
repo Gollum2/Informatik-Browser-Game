@@ -14,31 +14,31 @@
     <!--style="overflow:hidden" scroll="no"-->
 
     <div style="z-index: 10;">
-        <h1 style="position:fixed;top: 10px;left: 10px;">Test</h1>
         <div id="settings" class="settings">settings</div>
-        <div id="craftmenu" class="craftmenu">craftmenu
-        </div>
+        <div id="craftmenu" class="craftmenu">craftmenu</div>
         <div id="taskbar" class="taskbar">
-            <div class="itemu1">u1</div>
-            <div class="itemu2">u2</div>
-            <div class="itemu3">u3</div>
-            <div class="itemu4">u4</div>
-            <div class="itemu5">u5</div>
-            <div class="itemu6">u6</div>
-            <div class="itemu7">u7</div>
-            <div class="itemu8">u8</div>
-            <div class="itemu9">u9</div>
-            <div class="itemu10">u10</div>
-            <div class="itemd1">d1</div>
-            <div class="itemd2">d2</div>
-            <div class="itemd3">d3</div>
-            <div class="itemd4">d4</div>
-            <div class="itemd5">d5</div>
-            <div class="itemd6">d6</div>
-            <div class="itemd7">d7</div>
-            <div class="itemd8">d8</div>
-            <div class="itemd9">d9</div>
-            <div class="itemd10">d10</div>
+            <div id="u1" class="itemu1" ondrop="cusomdrop(event)" ondragover="allowDrop(event)">
+                <div id="testthing" class="Thing" draggable="true" ondragstart="drag(event)"></div>
+            </div>
+            <div id="u2" class="itemu2" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u3" class="itemu3" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u4" class="itemu4" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u5" class="itemu5" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u6" class="itemu6" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u7" class="itemu7" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u8" class="itemu8" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u9" class="itemu9" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="u10" class="itemu10" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d1" class="itemd1" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d2" class="itemd2" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d3" class="itemd3" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d4" class="itemd4" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d5" class="itemd5" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d6" class="itemd6" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d7" class="itemd7" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d8" class="itemd8" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d9" class="itemd9" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
+            <div id="d10" class="itemd10" ondrop="cusomdrop(event)" ondragover="allowDrop(event)" ></div>
         </div>
     </div>
     <?php
@@ -74,6 +74,8 @@
             posy;
             type;
             color;
+            resource;
+            resourceamout;
         }
         class Chunk {
             tiles = []
@@ -81,7 +83,9 @@
             chnnkposy;
         }
         class Thing {
-
+        }
+        class Drill extends Thing{
+            icon="/data/drill.gif";
         }
 
         function setup() {
@@ -94,6 +98,7 @@
             c.style('z-index', -10);
             console.log(tilemap);
             c.position(0, 0);
+            
             stroke(255); // Set line drawing color to white
             frameRate(3);
             //print("test1");
@@ -113,28 +118,26 @@
         }
 
         function draw() {
+            
             leftborder = xxx - ceil(fieldcountwidth / 2);
             topborder = yyy - ceil(fieldcountheight / 2);
             for (let i = -1; i < fieldcountheight + 1; i++) {
                 for (let j = -1; j < fieldcountwidth + 1; j++) {
-                    //console.log((topborder + i)+" "+(leftborder + j));
-                    //console.log(tilemap);
-                    //console.log(tilemap[topborder + i][leftborder + j]);
                     try {
                         fill(tilemap[topborder + i][leftborder + j].color);
                         stroke(tilemap[topborder + i][leftborder + j].color);
-
-                        //print(j * (fieldsize) + leftofsett);
-                        //fill("#ff00ff")
                         if (i == floor(fieldcountheight / 2) && j == floor(fieldcountwidth / 2)) {
                             fill("#00ff00");
                             console.log((leftborder + j) + " -- " + (topborder + i));
                         }
                         rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
+                        if(tilemap[topborder + i][leftborder + j].content instanceof Thing){
+                            //console.log("thing lost");
+                            fill("#ff0000"); // set to icon of thing 
+                            rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize)
+                        }
                         textSize(15);
                         fill("#ffffff");
-                        //console.log();
-
                         text((tilemap[topborder + i][leftborder + j].value).toFixed(2) + " " + (leftborder + j) + " -- " + (topborder + i),
                             j * (fieldsize) + leftofsett, (i + 1) * (fieldsize) + topofsett);
                     } catch (error) {
@@ -234,8 +237,12 @@
                         print("array hinzugefugt")
                     }
                     for (let j = cx * 8; j < (cx + 1) * 8; j++, ccx++) {
-                        //console.log(i+" "+j+" is a known coordinate");
                         tilemap[i][j] = result.tile[ccy][ccx];
+                        //console.log(i+" "+j+" is a known coordinate");
+                        if(i==5 && j==5){
+                            console.log("new thing inserted");
+                            tilemap[i][j].content=new Thing();
+                        }
                     }
                 }
             }, function(err) {
@@ -267,7 +274,7 @@
                 }
             }
             if (keyCode === ESCAPE) {
-                console.log("settingsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+                console.log("settings");
                 var x = document.getElementById("settings");
                 if (x.style.display === "none") {
                     x.style.display = "block";
@@ -276,11 +283,11 @@
                 }
             }
             if (keyCode === 113) { //F2 key is pressed
-                fillVal = 255;
+                console.log("debug mode not working");
             }
         }
 
-        function removeunusedchunks() {
+        function removeunusedchunks() { //todo 
 
         }
 
@@ -482,6 +489,20 @@
                 erg.push([cpx, cpy]);
             }
             return erg;
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function cusomdrop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
         }
     </script>
 

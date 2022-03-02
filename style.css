@@ -114,7 +114,14 @@ div.craftmenu {
 .itemd10 {
     grid-area: d10;
 }
-
+.Thing{
+    position:absolute;
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    right: 5px;
+    background-color:red;
+}
 div.taskbar {
     background-color: rgba(150, 150, 150);
     position: fixed;
@@ -131,12 +138,13 @@ div.taskbar {
 }
 
 div.taskbar>div {
+    position: relative;
     background-color: rgb(100, 100, 100);
     text-align: center;
     padding: 20px 0;
     font-size: 30px;
 }
 div.taskbar>div:hover{
-    box-shadow:inset 0px 0px 0px 10px #333333;
+    box-shadow:inset 0px 0px 0px 5px #333333;
     background-color: rgb(140,140,140);
 }
