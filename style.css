@@ -37,98 +37,142 @@ div.craftmenu {
 
 .itemu1 {
     grid-area: u1;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu2 {
     grid-area: u2;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu3 {
     grid-area: u3;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu4 {
     grid-area: u4;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu5 {
     grid-area: u5;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu6 {
     grid-area: u6;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu7 {
     grid-area: u7;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu8 {
     grid-area: u8;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu9 {
     grid-area: u9;
+    width: 50px;
+    height: 50px;
 }
 
 .itemu10 {
     grid-area: u10;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd1 {
     grid-area: d1;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd2 {
     grid-area: d2;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd3 {
     grid-area: d3;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd4 {
     grid-area: d4;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd5 {
     grid-area: d5;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd6 {
     grid-area: d6;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd7 {
     grid-area: d7;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd8 {
     grid-area: d8;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd9 {
     grid-area: d9;
+    width: 50px;
+    height: 50px;
 }
 
 .itemd10 {
     grid-area: d10;
+    width: 50px;
+    height: 50px;
 }
-.Thing{
-    position:absolute;
-    top: 5px;
-    left: 5px;
-    bottom: 5px;
-    right: 5px;
-    background-color:red;
+
+.icon {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: red;
+    user-select: none;
 }
+
 div.taskbar {
     background-color: rgba(150, 150, 150);
     position: fixed;
-    bottom: 2%;
-    left: 35%;
-    width: 30%;
-    aspect-ratio: 10/2;
+    left: 50%;
+    bottom: 3px;
+    width: 590px;
+    height: 110px;
+    transform: translateX(-50%);
     display: grid;
     grid-template-areas:
         'u1 u2 u3 u4 u5 u6 u7 u8 u9 u10'
@@ -141,10 +185,41 @@ div.taskbar>div {
     position: relative;
     background-color: rgb(100, 100, 100);
     text-align: center;
-    padding: 20px 0;
     font-size: 30px;
 }
-div.taskbar>div:hover{
-    box-shadow:inset 0px 0px 0px 5px #333333;
-    background-color: rgb(140,140,140);
+
+div.inventory {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    width: 30%;
+    height: 96%;
+    background-color: gray;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 5px;
+    padding: 5px;
+}
+
+div.inventoryspace {
+    background-color: greenyellow;
+    border: 2px solid rgb(0, 0, 0);
+}
+
+div.craftarea {
+    position: absolute;
+    top: 2%;
+    left: 34%;
+    width: 64%;
+    height: 96%;
+    background-color: tomato;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+.recipe{
+    aspect-ratio: 1 / 1;
+    font-size: 40px;
+}
+div.taskbar>div:hover {
+    background-color: rgb(140, 140, 140);
 }
