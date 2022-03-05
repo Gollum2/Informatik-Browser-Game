@@ -213,8 +213,7 @@
             result = result.split(" ");
             console.log(needs);
             console.log("needs werden noch nicht removed");
-            let verfugbar;
-            let verfugbararray = [];
+            let verfugbar=0;
             for (let j = 0; j < needs.length; j += 2) {
                 console.log("in der for schleife");
                 for (let i = 0; i < quickbar[0].length; i++) {
@@ -230,12 +229,55 @@
                         verfugbar += inventory[i].amount;
                     }
                 }
+                console.log(verfugbar+" sind verfugbar");
                 if (verfugbar < needs[j]) {
                     console.log("nees not acomplished " + verfugbar + "<" + needs[j]);
                     return;
+                } else { //entferne die ressourcen
+                    temp = needs[j];
+                    for (let i = 0; i < inventory.length; i++) {
+                        if (inventory[i].name == needs[j + 1]) {
+                            if (inventory[i].amount > temp) {
+                                inventory[i].amount -= temp;
+                                temp = 0;
+                            } else {
+                                temp = temp - inventory[i].amount;
+                                inventory[i] = "";
+                            }
+                            if (temp == 0) {
+                                break;
+                            }
+                        }
+                    }
+                    if (temp != 0) {
+                        for (let i = 0; i < quickbar[0].length; i++) {
+                            if (quickbar[0][i].name == needs[j + 1]) {
+                                if (quickbar[0][i].amount > temp) {
+                                    quickbar[0][i].amount -= temp;
+                                    temp = 0;
+                                } else {
+                                    temp = temp - quickbar[0][i].amount;
+                                    quickbar[0][i] = "";
+                                }
+                                if (temp == 0) {
+                                    break;
+                                }
+                            }
+                            if (quickbar[1][i].name == needs[j + 1]) {
+                                if (quickbar[1][i].amount > temp) {
+                                    quickbar[1][i].amount -= temp;
+                                    temp = 0;
+                                } else {
+                                    temp = temp - quickbar[1][i].amount;
+                                    quickbar[1][i] = "";
+                                }
+                                if (temp == 0) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
-                verfugbararray.push(verfugbar);
-
             }
             console.log("thins are good");
             for (let j = 0; j < result.length; j += 2) {
