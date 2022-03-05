@@ -113,9 +113,9 @@
     <div class="center" <?php echo $hidden1 ?>>
         <h1>Register</h1>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <input name="newusername" type="text" value="" placeholder="Username" required /><br>
-            <input id="p2" name="newpassword" type="password" value="" placeholder="Password" oninput="checkifsame()" /><br>
-            <input id="p1" name="newpassword" type="password" value="" placeholder="Confirm Password" oninput="checkifsame()" />
+            <input name="newusername" type="text" value="" required placeholder="Username" required /><br>
+            <input id="p2" name="newpassword" type="password" value="" required placeholder="Password" oninput="checkifsame()" /><br>
+            <input id="p1" name="newpassword2" type="password" value="" required placeholder="Confirm Password" oninput="checkifsame()" />
             <p id="error"></p>
 
             <input type="submit" />
