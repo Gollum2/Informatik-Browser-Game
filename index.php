@@ -54,7 +54,10 @@
                 $stmt = $conn->prepare('Insert into userr (username,passwort) values (?,?);');
                 $stmt->bind_param("ss", $_POST["newusername"], $_POST["newpassword"]);
                 $stmt->execute();
+                $_SESSION["pass"] = $pass;
+                $_SESSION["user"] = $username;
             }
+
         }
         if (isset($_POST["register"])) {
             $hidden1 = "";
@@ -101,12 +104,12 @@
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <label for="un">Username: </label><br><input id="un" name="userpostname" type="text" value="<?php echo $usernamestring ?>" /><br>
             <label for="psw">Password: </label><br><input id="psw" name="userpassword" type="password" value="<?php echo $passwordstring ?>" /><br>
-            <input type="submit" value="Login" />
+            <input type="submit" value="Login" style="width:30%;height:15%;font-size:1vm"/>
         </form>
         <p><?php echo $errormessage ?>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <input type="hidden" name="register" value="Gollum" />
-            <input type="submit" value="Register" />
+            <input type="hidden" name="register" value="Gollum"/>
+            <input type="submit" value="Register" style="width:30%;height:15%;font-size:1vm"/>
         </form>
         <br>
     </div>
@@ -118,7 +121,7 @@
             <input id="p1" name="newpassword2" type="password" value="" required placeholder="Confirm Password" oninput="checkifsame()" />
             <p id="error"></p>
 
-            <input type="submit" />
+            <input type="submit" style="width:3em;height:1.5em;font-size:1em"/>
         </form>
         <p><?php echo $errormessage ?>
         <p id="error"></p>

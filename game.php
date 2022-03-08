@@ -14,7 +14,11 @@
     <!--style="overflow:hidden" scroll="no"-->
 
     <div style="z-index: 10;">
-        <div id="settings" class="settings">settings</div>
+        <div id="settings" style="background-color: rgba(150, 150, 150, 0.75);position: fixed;top: 0px;left: 0px;width: 100%;height: 100%;display: none;">
+            <div class="settings">
+                <button onclick="saveworld()" style="width:50%;height:10%;font-size: 5.5vw;">saveworld</button>
+            </div>
+        </div>
         <div id="craftmenu" class="craftmenu">
             <div class="inventory" id="inventory">
                 <div class="inventoryspace" id="i1" ondrop="cusomdrop(event)" ondragover="allowDrop(event)"></div>
@@ -116,8 +120,11 @@
             icon;
         }
         class Thing extends Item {
-
-
+            image;
+            storage;
+            openmashine() {
+                console.log("open maschine insides to get things");
+            }
         }
 
 
@@ -173,9 +180,7 @@
             topborder = yyy - ceil(fieldcountheight / 2);
             mouseoverx = leftborder + floor((mouseX - leftofsett) / fieldsize);
             mouseovery = topborder + floor((mouseY - topofsett) / fieldsize);
-            /*if (selected != null) {   
-                console.log(mouseoverx + " / " + mouseovery+"   "+selected);
-            }*/
+
             //updatequickbar();
             for (let i = -1; i < fieldcountheight + 1; i++) {
                 for (let j = -1; j < fieldcountwidth + 1; j++) {
@@ -190,8 +195,13 @@
                         rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
                         if (tilemap[topborder + i][leftborder + j].content instanceof Thing) {
                             //console.log("thing lost");
-                            fill("#ff0000"); // set to icon of thing 
-                            rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize)
+                            fill("#ffff00"); // set to icon of thing 
+                            if (tilemap[topborder + i][leftborder + j].content.image != null && tilemap[topborder + i][leftborder + j].content.image != "" &&
+                                isNaN(tilemap[topborder + i][leftborder + j].content.image)) {
+                                //console.log("ffffffffffffffffffffffffffffffffffffffff");
+                                image(tilemap[topborder + i][leftborder + j].content.image, j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize);
+                            }
+                            //rect(j * (fieldsize) + leftofsett, i * (fieldsize) + topofsett, fieldsize, fieldsize)
                         }
                         textSize(15);
                         fill("#ffffff");
@@ -200,9 +210,20 @@
                     } catch (error) {
                         console.log("thing not found");
                         console.log(error);
+                        console.log(involvedchunks());
                     }
                 }
             }
+            if (selected instanceof Thing) {
+                //console.log(mouseoverx + " / " + mouseovery + "   " + selected + " ## " + leftborder + "/" + topborder);
+                //console.log((abs(leftborder) + mouseoverx) + "//" + (abs(topborder) + mouseovery));
+                fill("#ff0000");
+                rect((abs(leftborder) + mouseoverx) * fieldsize + leftofsett, (abs(topborder) + mouseovery) * fieldsize + topofsett, 100, 100);
+            }
+        }
+
+        function saveworld() {
+            console.log("saveworld");
         }
 
         function craft(a) { //better crafting system so that i dont need to outprogramm everything
@@ -213,7 +234,7 @@
             result = result.split(" ");
             console.log(needs);
             console.log("needs werden noch nicht removed");
-            let verfugbar=0;
+            let verfugbar = 0;
             for (let j = 0; j < needs.length; j += 2) {
                 console.log("in der for schleife");
                 for (let i = 0; i < quickbar[0].length; i++) {
@@ -229,7 +250,7 @@
                         verfugbar += inventory[i].amount;
                     }
                 }
-                console.log(verfugbar+" sind verfugbar");
+                console.log(verfugbar + " sind verfugbar");
                 if (verfugbar < needs[j]) {
                     console.log("nees not acomplished " + verfugbar + "<" + needs[j]);
                     return;
@@ -295,16 +316,23 @@
                         return;
                     }
                 }
+                for (let i = 0; i < inventory.length; i++) {
+                    if (inventory[i].name == result[j + 1]) {
+                        inventory[1].amount++;
+                        updatequickbar();
+                        return;
+                    }
+                }
                 let temp = new Thing();
                 temp.amount = 1;
                 temp.name = result[j + 1];
                 temp.icon = "/data/" + result[j + 1] + "_icon.png";
                 console.log("an neuer stelle hinzufugen");
+                temp.image = loadImage('/data/' + temp.name + "_icon.png");
                 console.log(temp.icon);
                 for (let i = 0; i < quickbar[0].length; i++) {
                     if (quickbar[0][i] == "" || quickbar[0][i] == null) {
                         quickbar[0][i] = temp;
-                        console.log("oben hinzugefugt");
                         updatequickbar();
                         return;
                     }
@@ -312,14 +340,39 @@
                 for (let i = 0; i < quickbar[0].length; i++) {
                     if (quickbar[1][i] == "" || quickbar[1][i] == null) {
                         quickbar[1][i] = temp;
-                        console.log("unten hinzugefug");
                         updatequickbar();
                         return;
                     }
                 }
-                updatequickbar();
+                for (let i = 0; i < inventory.length; i++) {
+                    if (inventory[i] == "" || inventory[i] == null) {
+                        inventory[i] = temp;
+                        updatequickbar();
+                        return;
+                    }
+                }
             }
-            updatequickbar();
+        }
+
+        function selectitem(ding) {
+            console.log("selected functoin");
+            console.log(ding);
+            console.log(ding.parentNode);
+            //ding.style.opacity = 0.8;
+            let temp = ding.parentNode.id;
+            console.log(temp);
+            if (temp[0] == "u") {
+                console.log("upper");
+                selected = quickbar[0][temp[1] - 1];
+            }
+            if (temp[0] == "d") {
+                selected = quickbar[1][temp[1] - 1];
+            }
+            if (temp[0] == "i") {
+                selected = inventory[temp[1] - 1];
+            }
+            console.log(selected);
+            //ding.style.opacity = 0.5;
         }
 
         function updatequickbar() {
@@ -328,21 +381,28 @@
                 slot = document.getElementById("u" + (i + 1));
                 if (quickbar[0][i] instanceof Item) {
                     console.log(quickbar[0][i].icon);
-                    slot.innerHTML = '<div id="divlost' + ids + '" draggable="true" ondragstart="drag(event)" onclick="selectitem()" style="width:50px;height:50px;position:absolute">' +
-                        '<img src=' + quickbar[0][i].icon + ' class="icon" width="50" height="50" id="picture' + ids + '" draggable="false" ondrop="customdrop2(event) ondragstart="false;">' +
-                        '<p style="position:absolute;top:-10px;right:0px">' + quickbar[0][i].amount + "</p></div>";
-                    ids++;
+                    if (quickbar[0][i].amount > 0) {
+                        slot.innerHTML = '<div id="divlost' + ids + '" draggable="true" ondragstart="drag(event)" onclick="selectitem(this)" style="width:50px;height:50px;position:absolute">' +
+                            '<img src=' + quickbar[0][i].icon + ' class="icon" width="50" height="50" id="picture' + ids + '" draggable="false" ondrop="customdrop2(event) ondragstart="false;">' +
+                            '<p style="position:absolute;top:-10px;right:0px">' + quickbar[0][i].amount + "</p></div>";
+                        ids++;
+                    } else {
+                        quickbar[0][i] = "";
+                    }
                 } else {
                     slot.innerHTML = "";
                 }
                 slot = document.getElementById("d" + (i + 1));
                 if (quickbar[1][i] instanceof Item) {
                     console.log(quickbar[1][i].icon);
-                    slot.innerHTML = '<div id="downquickbarlost' + ids + '" draggable="true" ondragstart="drag(event)" onclick="selectitem()" style="width:50px;height:50px;position:absolute">' +
-                        '<img src=' + quickbar[1][i].icon + ' class="icon" width="50" height="50" id="picture2' + ids + '"  draggable="false" ondrop="customdrop2(event)" ondragstart="false;">' +
-                        '<p style="position:absolute;top:-10px;right:0px">' + quickbar[1][i].amount + "</p></div>";
-                    ids++;
-
+                    if (quickbar[1][i].amount > 1) {
+                        slot.innerHTML = '<div id="downquickbarlost' + ids + '" draggable="true" ondragstart="drag(event)" onclick="selectitem(this)" style="width:50px;height:50px;position:absolute">' +
+                            '<img src=' + quickbar[1][i].icon + ' class="icon" width="50" height="50" id="picture2' + ids + '"  draggable="false" ondrop="customdrop2(event)" ondragstart="false;">' +
+                            '<p style="position:absolute;top:-10px;right:0px">' + quickbar[1][i].amount + "</p></div>";
+                        ids++;
+                    } else {
+                        quickbar[1][i] = "";
+                    }
                 } else {
                     slot.innerHTML = "";
                 }
@@ -351,10 +411,14 @@
                 slot = document.getElementById("i" + (i + 1));
                 if (inventory[i] instanceof Item) {
                     console.log(inventory[i].icon);
-                    slot.innerHTML = '<div id="downquickbarlost' + ids + '" draggable="true" ondragstart="drag(event)" onclick="selectitem()" style="width:50px;height:50px;position:absolute">' +
-                        '<img src=' + inventory[i].icon + ' class="icon" width="50" height="50" id="inventor' + ids + '"ondrop="customdrop2(event) draggable="false" ondragstart="false;">' +
-                        '<p style="position:absolute;top:-10px;right:0px">' + inventory[i].amount + "</p></div>";
-                    ids++;
+                    if (inventory[i].amount > 0) {
+                        slot.innerHTML = '<div id="downquickbarlost' + ids + '" draggable="true" ondragstart="drag(event)" onclick="selectitem()" style="width:50px;height:50px;position:absolute">' +
+                            '<img src=' + inventory[i].icon + ' class="icon" width="50" height="50" id="inventor' + ids + '"ondrop="customdrop2(event) draggable="false" ondragstart="false;">' +
+                            '<p style="position:absolute;top:-10px;right:0px">' + inventory[i].amount + "</p></div>";
+                        ids++;
+                    } else {
+                        inventory[i] = "";
+                    }
                 } else {
                     slot.innerHTML = "";
                 }
@@ -368,64 +432,76 @@
             console.log("angeklickt");
             mouseoverx = leftborder + floor((mouseX - leftofsett) / fieldsize);
             mouseovery = topborder + floor((mouseY - topofsett) / fieldsize);
-            if (tilemap[mouseovery][mouseoverx].resource == "stone") {
+            console.log(mouseoverx + "///" + mouseovery);
+            if (selected instanceof Thing) {
+                console.log(" selected is an instance of thing noice ");
+                if (tilemap[mouseovery][mouseoverx].content == "" || tilemap[mouseovery][mouseoverx].content == null || isNaN(tilemap[mouseovery][mouseoverx].content)) {
+                    tilemap[mouseovery][mouseoverx].content = selected;
+                    selected.amount--;
+                    if (selected.amount <= 0) {
+                        selected = "";
+                    }
+                    console.log("placed");
+                    updatequickbar();
+                }
+            } else if (tilemap[mouseovery][mouseoverx].content instanceof Thing) {
+                tilemap[mouseovery][mouseoverx].content.openmashine();
+            } else if (tilemap[mouseovery][mouseoverx].resource == "stone") {
                 let temp = new Item();
                 temp.name = "stone";
                 temp.amount = 1;
                 temp.color = "#aaaaaa";
                 temp.icon = "/data/stone_icon.png";
-                for (let i = 0; i < quickbar[0].length; i++) {
-                    if (quickbar[0][i].name == "stone") {
-                        quickbar[0][i].amount++;
-                        console.log("up");
-                        updatequickbar();
-                        return;
-                    }
-                }
-                for (let i = 0; i < quickbar[0].length; i++) {
-                    if (quickbar[1][i].name == "stone") {
-                        quickbar[1][i].amount++;
-                        console.log("down1");
-                        updatequickbar();
-                        return;
-                    }
-                }
-                for (let i = 0; i < quickbar[0].length; i++) {
-                    if (quickbar[0][i] == "" || quickbar[0][i] == null) {
-                        quickbar[0][i] = temp;
-                        console.log("up");
-                        updatequickbar();
-                        return;
-                    }
-                }
-                for (let i = 0; i < quickbar[0].length; i++) {
-                    if (quickbar[1][i] == "" || quickbar[1][i] == null) {
-                        quickbar[1][i] = temp;
-                        console.log("down2");
-                        updatequickbar();
-                        return;
-                    }
-                }
+                addtoinventory(temp);
             } // TODO add to inventory and do something when full
+            updatequickbar();
         }
 
-        /*
-        allthingsthatareitemsandidontwantthisnametobeusedagain.onclick = function() {
-            console.log("Gollum Gollum Gollum Gollum Gollum Gollum Gollum Gollum Gollum Gollum Gollum");
-            this.style.opacity = 0.5; //
-            //just to add an element to quickbar;
-            console.log(this.parentNode.id);
-            split1 = this.parentNode.id.substring(0, 1);
-            split2 = this.parentNode.id.substring(1);
-            if (split1 == "u") {
-                quickbar[0][split2] = new Thing();
-                selected = quickbar[0][split2];
-            } else if (split[0] == "d") {
-                quickbar[1][split2] = new Thing();
-                selected = quickbar[1][split2];
+        function addtoinventory(temp) {
+            for (let i = 0; i < quickbar[0].length; i++) {
+                if (quickbar[0][i].name == temp.name) {
+                    quickbar[0][i].amount++;
+                    updatequickbar();
+                    return;
+                }
             }
-        }*/
-
+            for (let i = 0; i < quickbar[0].length; i++) {
+                if (quickbar[1][i].name == temp.name) {
+                    quickbar[1][i].amount++;
+                    updatequickbar();
+                    return;
+                }
+            }
+            for (let i = 0; i < inventory.length; i++) {
+                if (inventory[i].name == temp.name) {
+                    inventory[1].amount++;
+                    updatequickbar();
+                    return;
+                }
+            }
+            for (let i = 0; i < quickbar[0].length; i++) {
+                if (quickbar[0][i] == "" || quickbar[0][i] == null) {
+                    quickbar[0][i] = temp;
+                    updatequickbar();
+                    return;
+                }
+            }
+            for (let i = 0; i < quickbar[0].length; i++) {
+                if (quickbar[1][i] == "" || quickbar[1][i] == null) {
+                    quickbar[1][i] = temp;
+                    updatequickbar();
+                    return;
+                }
+            }
+            for (let i = 0; i < inventory.length; i++) {
+                if (inventory[i] == "" || inventory[i] == null) {
+                    inventory[i] = temp;
+                    updatequickbar();
+                    return;
+                }
+            }
+            updatequickbar();
+        }
 
         Array.prototype.containsArray = function(val) {
             var hash = {};
@@ -545,11 +621,15 @@
                 moverleft();
             }
             if (key == "q") {
-                var x = document.getElementById("craftmenu");
-                if (x.style.display === "none") {
-                    x.style.display = "block";
+                if (selected instanceof Item) {
+                    selected = "";
                 } else {
-                    x.style.display = "none";
+                    var x = document.getElementById("craftmenu");
+                    if (x.style.display === "none") {
+                        x.style.display = "block";
+                    } else {
+                        x.style.display = "none";
+                    }
                 }
             }
             if (keyCode === ESCAPE) {
@@ -746,12 +826,26 @@
         }
 
         function involvedchunks() {
-            erg = [];
-            //print(xxx + " " + yyy + " " + fieldcountwidth + " " + fieldcountheight + " involvedchungs");
             let leftborder = xxx - ceil(fieldcountwidth / 2);
             let topborder = yyy - ceil(fieldcountheight / 2);
             let rightborder = xxx + ceil(fieldcountwidth / 2);
             let bottomborder = yyy + ceil(fieldcountheight / 2);
+
+            let mincpy = floor(topborder / chunksize);
+            let maxcpy = floor(bottomborder / chunksize);
+            let maxcpx = floor(rightborder / chunksize);
+            let mincpx = floor(leftborder / chunksize);
+            console.log(maxcpy + " " + maxcpx + " " + mincpy + " " + mincpx);
+            erg = [];
+            for (let i = mincpy; i <= maxcpy; i++) { 
+                for (let j = mincpx; j <= maxcpx; j++) {  
+                    erg.push([j,i]);
+                }
+            }
+            console.log(erg);
+            //erg = [];
+            /*
+            //print(xxx + " " + yyy + " " + fieldcountwidth + " " + fieldcountheight + " involvedchungs");
             //print(leftborder + " " + rightborder + " " + topborder + " " + bottomborder + " da lfjal");
             for (let i = topborder - 1; i <= bottomborder + 1; i += 7) { //todo check distanz einstellen 
                 for (let j = leftborder - 1; j <= rightborder + 1; j += 7) {
@@ -766,7 +860,7 @@
             let cpx = floor(rightborder / chunksize);
             if (erg.containsArray([cpx, cpy]) == false) {
                 erg.push([cpx, cpy]);
-            }
+            }*/
             return erg;
         }
 

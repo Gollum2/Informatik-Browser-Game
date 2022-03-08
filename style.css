@@ -6,6 +6,19 @@ div.center {
     left: 25%;
     position: absolute;
     text-align: center;
+    font-size: 2vw;
+}
+input[type="text"]{
+    font-size: 2vw;
+
+}
+input[type="password"]{
+    font-size: 2vw;
+}
+input[type="submit"]{
+    width:50%;
+    height:10%;
+
 }
 
 .feld {
