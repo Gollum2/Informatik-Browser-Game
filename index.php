@@ -57,7 +57,6 @@
                 $_SESSION["pass"] = $pass;
                 $_SESSION["user"] = $username;
             }
-
         }
         if (isset($_POST["register"])) {
             $hidden1 = "";
@@ -95,7 +94,7 @@
             }
             $usernamestring = $username;
             $passwordstring = $pass;
-            $errormessage = "Username oder Password incorrect";
+            $errormessage = "Username or Password incorrect";
         }
     }
     ?>
@@ -104,24 +103,24 @@
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <label for="un">Username: </label><br><input id="un" name="userpostname" type="text" value="<?php echo $usernamestring ?>" /><br>
             <label for="psw">Password: </label><br><input id="psw" name="userpassword" type="password" value="<?php echo $passwordstring ?>" /><br>
-            <input type="submit" value="Login" style="width:30%;height:15%;font-size:1vm"/>
+            <input type="submit" value="Login" style="width:30%;height:15%;font-size:1vm" />
         </form>
         <p><?php echo $errormessage ?>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <input type="hidden" name="register" value="Gollum"/>
-            <input type="submit" value="Register" style="width:30%;height:15%;font-size:1vm"/>
+            <input type="hidden" name="register" value="" />
+            <input type="submit" value="Register" style="width:30%;height:15%;font-size:1vm" />
         </form>
         <br>
     </div>
     <div class="center" <?php echo $hidden1 ?>>
         <h1>Register</h1>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <input name="newusername" type="text" value="" required placeholder="Username" required /><br>
-            <input id="p2" name="newpassword" type="password" value="" required placeholder="Password" oninput="checkifsame()" /><br>
-            <input id="p1" name="newpassword2" type="password" value="" required placeholder="Confirm Password" oninput="checkifsame()" />
-            <p id="error"></p>
+            <input name="newusername" type="text" value="" required placeholder="Username" onkeyup="checkifusable(this.value)" autocomplete="off"/><br>
+            <input id="p2" name="new-password" type="password" value="" required placeholder="Password" oninput="checkifsame()" autocomplete="new-password"/><br>
+            <input id="p1" name="newpassword2" type="password" value="" required placeholder="Confirm Password" oninput="checkifsame()"  autocomplete="new-password"/>
+            <p id="error1"></p>
 
-            <input type="submit" style="width:3em;height:1.5em;font-size:1em"/>
+            <input id="registerbutton" type="submit" style="width:3em;height:1.5em;font-size:1em" />
         </form>
         <p><?php echo $errormessage ?>
         <p id="error"></p>
@@ -137,13 +136,31 @@
             console.log(a.value);
             if (a.value == b.value) {
                 document.getElementById("error").textContent = ""
+                document.getElementById("registerbutton").disabled = true;
                 if (a.value.length < 5 || a.value.lenght > 44) {
                     document.getElementById("error").textContent = "Passwort muss zwischen 5 und 45 zeichen lang sein"
+                    document.getElementById("registerbutton").disabled = true;
                 }
             } else {
                 document.getElementById("error").textContent = "The passwords are not equal"
+                document.getElementById("registerbutton").disabled = true;
             }
 
+        }
+
+        function checkifusable(string) { //wollte ajax testen
+            console.log("ckeck username");
+            if (string.length == 0) {
+                document.getElementById("error").innerHTML = "";
+                return;
+            } else {
+                const xmlhttp = new XMLHttpRequest();
+                xmlhttp.onload = function() {
+                    document.getElementById("error1").innerHTML = this.responseText;
+                }
+                xmlhttp.open("GET", "usermanager.php?name=" + string);
+                xmlhttp.send();
+            }
         }
     </script>
 
