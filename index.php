@@ -89,7 +89,7 @@
             if ($erg[2] == $pass) {
                 $_SESSION["id"] = $erg[0];
                 //print_r($randomString);
-                header("Location: /game.php?");
+                header("Location: /selectworld.php");
                 exit;
             }
             $usernamestring = $username;
@@ -103,12 +103,12 @@
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <label for="un">Username: </label><br><input id="un" name="userpostname" type="text" value="<?php echo $usernamestring ?>" /><br>
             <label for="psw">Password: </label><br><input id="psw" name="userpassword" type="password" value="<?php echo $passwordstring ?>" /><br>
-            <input type="submit" value="Login" style="width:30%;height:15%;font-size:1vm" />
+            <input type="submit" value="Login" style="width:50%;height:10%;" />
         </form>
         <p><?php echo $errormessage ?>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <input type="hidden" name="register" value="" />
-            <input type="submit" value="Register" style="width:30%;height:15%;font-size:1vm" />
+            <input type="submit" value="Register" style="width:50%;height:10%;" />
         </form>
         <br>
     </div>

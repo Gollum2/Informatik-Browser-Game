@@ -8,10 +8,11 @@ div.center {
     text-align: center;
     font-size: 2vw;
 }
+
 input[type="text"]{
     font-size: 2vw;
-
 }
+
 input[type="password"]{
     font-size: 2vw;
 }
