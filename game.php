@@ -14,8 +14,15 @@
     <!--style="overflow:hidden" scroll="no"-->
 
     <?php
-    if (isset($_SESSION["currentseed"])) {
-        echo "<script>seed=" . $_SESSION["currentseed"] . "</script>";
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+    session_start();
+    if (!isset($_SESSION["id"])) {
+        header("Location: /index.php");
+    }
+    if (!isset($_SESSION["currentseed"])) {
+        header("Location: /index.php");
     }
     ?>
     <div style="z-index: 10;">
@@ -71,9 +78,10 @@
     </div>
 
     <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
-    <script src=script.js></script>
-
+    <script> var masterseed=<?php echo $_SESSION["currentseed"] ?> </script>
+    <script src="script.js"></script>
     <script src="p5/p5.js"></script>
+ 
 
 </body>
 

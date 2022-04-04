@@ -9,6 +9,10 @@
 
 <body>
     <?php
+    session_start();
+    if (!isset($_SESSION["id"])) {
+        header("Location: /index.php");
+    }
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
@@ -58,7 +62,7 @@
     var_dump($erg[0]);
     $selection = "";
     for ($i = 0; $i < count($erg); $i++) {
-        $temp = '<div class="worlddiv" id=""><h1>' . $erg[$i][7] . '</h1><h2>' . $erg[$i][1] . '</h2><p>creator' . $erg[$i][2] . '  Visits' . $erg[$i][3] . '  Timespend:' . $erg[$i][4] . '</p><p>' . $erg[$i][6] . '</p></div>';
+        $temp = '<div class="worlddiv" id="p' . $erg[$i][1] . '"><h1>' . $erg[$i][7] . '</h1><h2>' . $erg[$i][1] . '</h2><p>creator' . $erg[$i][2] . '  Visits' . $erg[$i][3] . '  Timespend:' . $erg[$i][4] . '</p><p>' . $erg[$i][6] . '</p></div>';
         $selection .= $temp;
     }
     //var_dump($erg);
@@ -67,7 +71,7 @@
     <br><button id="newwordbutton" onclick="shownewworld()">Create New World</button>
     <div id="newworldsetting" style='display:none'>
         <form method="POST" id="generateform" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <input name="seed" type="number" id="seedinput2" placeholder="seed" value="" />
+            <input name="seed" type="number" maxlength="9" id="seedinput2" placeholder="seed" value="" />
             <input name="name" type="text" id="nameinput" placeholder="Name" value="" /><br>
             <label onclick="box(document.getElementById(privatecheckbox))" for="privatecheckbox">Private</label><input onchange="box(this)" id="privatecheckbox" type="checkbox" name="visibility" value="private">
             <label onclick="box(document.getElementById(publiccheckbox))" for="publiccheckbox">Public</label><input onchange="box(this)" id="publiccheckbox" type="checkbox" name="visibility" value="public">
@@ -78,7 +82,20 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script>
         $(".worlddiv").click(function() {
-            window.location.href = "/localhost:81/game.php";
+            let string = this.id;
+            string = string.slice(1);
+            if (string.length == 0) {
+                document.getElementById("error").innerHTML = "";
+                return;
+            } else {
+                const xmlhttp = new XMLHttpRequest();
+                xmlhttp.onload = function() {
+                    document.getElementById("error1").innerHTML = this.responseText;
+                }
+                xmlhttp.open("GET", "/usermanager.php?setseed=" + string);
+                xmlhttp.send();
+            }
+            window.location.href = "/game.php";
         });
 
         function shownewworld() {

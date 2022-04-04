@@ -11,7 +11,7 @@
     <?php
     function generateRandomString($length = 25)
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!§$%&/()=?';
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!§$%&';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
@@ -29,11 +29,13 @@
     $hidden2 = "";
     $errormessage = "";
     if (isset($_SESSION["user"])) {
-
         $usernamestring = $_SESSION["user"];
         $passwordstring = $_SESSION["pass"];
     }
+    //echo "postpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpost";
+    //var_dump($_SERVER["REQUEST_METHOD"]);
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        echo "postpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpostpost";
 
         if (isset($_POST["newusername"], $_POST["newpassword"])) {
             $servername = "localhost";
@@ -84,9 +86,9 @@
             $erg = $erg[0];
             $conn->close();
             //$randomString = generateRandomString(40);
-            $_SESSION["pass"] = $pass;
-            $_SESSION["user"] = $username;
             if ($erg[2] == $pass) {
+                $_SESSION["pass"] = $pass;
+                $_SESSION["user"] = $username;
                 $_SESSION["id"] = $erg[0];
                 //print_r($randomString);
                 header("Location: /selectworld.php");
@@ -115,9 +117,9 @@
     <div class="center" <?php echo $hidden1 ?>>
         <h1>Register</h1>
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <input name="newusername" type="text" value="" required placeholder="Username" onkeyup="checkifusable(this.value)" autocomplete="off"/><br>
-            <input id="p2" name="new-password" type="password" value="" required placeholder="Password" oninput="checkifsame()" autocomplete="new-password"/><br>
-            <input id="p1" name="newpassword2" type="password" value="" required placeholder="Confirm Password" oninput="checkifsame()"  autocomplete="new-password"/>
+            <input name="newusername" type="text" value="" required placeholder="Username" onkeyup="checkifusable(this.value)" autocomplete="off" /><br>
+            <input id="p2" name="new-password" type="password" value="" required placeholder="Password" oninput="checkifsame()" autocomplete="new-password" /><br>
+            <input id="p1" name="newpassword2" type="password" value="" required placeholder="Confirm Password" oninput="checkifsame()" autocomplete="new-password" />
             <p id="error1"></p>
 
             <input id="registerbutton" type="submit" style="width:3em;height:1.5em;font-size:1em" />
