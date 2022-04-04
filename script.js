@@ -13,7 +13,7 @@ var leftofsett = 0;
 var topofsett = 0;
 var tilemap = [];
 var displaywindow = [];
-let renderdistance = 1;
+let renderdistance = 0;
 var loadedchunks = []; // all chunks that are stored are inside as chunk objekt
 //var masterseed = 42;
 var chunksize = 8;
@@ -154,13 +154,13 @@ function saveworld() {
     console.log("saveworld");
     console.log(placedthingsstring);
     const xmlhttp = new XMLHttpRequest();
+    let string=placedthingsstring;
     xmlhttp.onload = function () {
+        console.log(this.responseText);
         //todo confirm that save was succesfull
     }
     xmlhttp.open("GET", "usermanager.php?dataupdate=" + string);
     xmlhttp.send();
-
-
 }
 
 function craft(a) { //better crafting system so that i dont need to outprogramm everything
@@ -365,7 +365,6 @@ function updatequickbar() {
 }
 
 function angeklickt() {
-
     console.log("angeklickt");
     mouseoverx = leftborder + floor((mouseX - leftofsett) / fieldsize);
     mouseovery = topborder + floor((mouseY - topofsett) / fieldsize);
@@ -791,6 +790,10 @@ function involvedchunks() {
     let maxcpy = floor(bottomborder / chunksize);
     let maxcpx = floor(rightborder / chunksize);
     let mincpx = floor(leftborder / chunksize);
+    mincpy-=(1+renderdistance);
+    maxcpy+=(1+renderdistance);
+    mincpx-=(1+renderdistance);
+    maxcpx+=(1+renderdistance);
     //console.log(maxcpy + " " + maxcpx + " " + mincpy + " " + mincpx);
     erg = [];
     for (let i = mincpy; i <= maxcpy; i++) {

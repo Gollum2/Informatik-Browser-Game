@@ -62,7 +62,7 @@
     var_dump($erg[0]);
     $selection = "";
     for ($i = 0; $i < count($erg); $i++) {
-        $temp = '<div class="worlddiv" id="p' . $erg[$i][1] . '"><h1>' . $erg[$i][7] . '</h1><h2>' . $erg[$i][1] . '</h2><p>creator' . $erg[$i][2] . '  Visits' . $erg[$i][3] . '  Timespend:' . $erg[$i][4] . '</p><p>' . $erg[$i][6] . '</p></div>';
+        $temp = '<div class="worlddiv" id="p' . $erg[$i][0] . '"><h1>' . $erg[$i][7] . '</h1><h2>' . $erg[$i][1] . '</h2><p>creator' . $erg[$i][2] . '  Visits' . $erg[$i][3] . '  Timespend:' . $erg[$i][4] . '</p><p>' . $erg[$i][6] . '</p></div>';
         $selection .= $temp;
     }
     //var_dump($erg);
@@ -83,16 +83,19 @@
     <script>
         $(".worlddiv").click(function() {
             let string = this.id;
-            string = string.slice(1);
+            string2 = string.slice(1);
+            string = this.children[1].innerHTML;
+            //console.log(this.children);
+            console.log(string+" ## "+string2);
             if (string.length == 0) {
-                document.getElementById("error").innerHTML = "";
+                alert("something went wrong");
                 return;
             } else {
                 const xmlhttp = new XMLHttpRequest();
                 xmlhttp.onload = function() {
                     document.getElementById("error1").innerHTML = this.responseText;
                 }
-                xmlhttp.open("GET", "/usermanager.php?setseed=" + string);
+                xmlhttp.open("GET", "/usermanager.php?setseed=" + string+"&id="+string2);
                 xmlhttp.send();
             }
             window.location.href = "/game.php";

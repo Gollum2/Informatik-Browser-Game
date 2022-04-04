@@ -24,6 +24,9 @@
     if (!isset($_SESSION["currentseed"])) {
         header("Location: /index.php");
     }
+    if(isset($_SESSION["worldid"])){
+        echo '<script>alert("jey")</script>';
+    }
     ?>
     <div style="z-index: 10;">
         <div id="settings" style="background-color: rgba(150, 150, 150, 0.75);position: fixed;top: 0px;left: 0px;width: 100%;height: 100%;display: none;">
