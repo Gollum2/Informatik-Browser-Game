@@ -154,13 +154,16 @@ function saveworld() {
     console.log("saveworld");
     console.log(placedthingsstring);
     const xmlhttp = new XMLHttpRequest();
-    let string=placedthingsstring;
+    let sttring=placedthingsstring.toString();
+    console.log("below is the sended string");
+    console.log(sttring);
+    console.log("\nstring end");
     xmlhttp.onload = function () {
         console.log(this.responseText);
         //todo confirm that save was succesfull
     }
-    xmlhttp.open("GET", "usermanager.php?dataupdate=" + string);
-    xmlhttp.send();
+    xmlhttp.open("POST", 'usermanager.php?dataupdate='+sttring);
+    xmlhttp.send(sttring);
 }
 
 function craft(a) { //better crafting system so that i dont need to outprogramm everything

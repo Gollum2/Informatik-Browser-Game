@@ -24,8 +24,9 @@
     if (!isset($_SESSION["currentseed"])) {
         header("Location: /index.php");
     }
-    if(isset($_SESSION["worldid"])){
-        echo '<script>alert("jey")</script>';
+    if(!isset($_SESSION["worldid"])){
+        header("Location: /selectworld.php");
+        echo '<script>alert("Something went wrong. Missing worldID")</script>';
     }
     ?>
     <div style="z-index: 10;">

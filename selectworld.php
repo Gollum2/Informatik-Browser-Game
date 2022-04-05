@@ -54,11 +54,6 @@
     $stmt->execute();
     $result = $stmt->get_result();
     $erg = $result->fetch_all();
-    echo "qwertzuiop<br>";
-
-    var_dump($erg);
-
-    echo "qwertzuiop<br>";
     var_dump($erg[0]);
     $selection = "";
     for ($i = 0; $i < count($erg); $i++) {

@@ -15,7 +15,6 @@ if (isset($_REQUEST['setseed'])) {
     $_SESSION["worldid"] = $_REQUEST["id"];
 }
 if (isset($_REQUEST["dataupdate"])) {
-    echo "xyzxyzxyzxyzxyzxyzyxzyxzyxzyzxyxzyxzyxzyxzyxzyxzyxz";
     $servername = "localhost";
     $username = "root";
     $password = "admin";
@@ -26,17 +25,22 @@ if (isset($_REQUEST["dataupdate"])) {
         echo " ups";
     }
     echo "connecion sucessfull";
-    echo "lost";
     $id = $_SESSION["worldid"];
-    $data = $_REQUEST["dataupdate"];
+    $rawData=file_get_contents('php://input');
+    echo "xxxxxxxxxxxxxxxxxxxxxxxxxx";
+    //var_dump($_SERVER);
+    $data = $rawData;
+    var_dump($rawData);
     $stmt2=$conn->prepare("select * from welten where welten.idwelten=?");
     $stmt2->bind_param("i", $id);
     $stmt2->execute();
     $result = $stmt2->get_result();
+    $erg = $result->fetch_all();
     $erg = $erg[0];
-    $conn->close();
-    $olddata=$erg["data"];
-    $data=$olddata+$data;
+    //var_dump($data);
+    echo "\n";
+    $olddata=$erg[5];
+    //$data=$olddata.$data;
     //todo check if things are placed
     /*
     for esample if on positin 3/3 there is a object 
@@ -45,12 +49,12 @@ if (isset($_REQUEST["dataupdate"])) {
     3/3
     */
     $stmt = $conn->prepare("update welten set welten.data=? where welten.idwelten=?");
-    echo "id data " . $id . " " . $data;
+    //echo "id data " . $id . " " . $data;
     $stmt->bind_param("si", $data, $id);
-    echo "rofl";
+    //echo " rofl";
     $stmt->execute();
-
-
+    //echo " executed";
+    $conn->close();
     /*
     echo "save worked";
     */
