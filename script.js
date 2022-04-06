@@ -153,16 +153,41 @@ function draw() {
 function saveworld() {
     console.log("saveworld");
     console.log(placedthingsstring);
-    const xmlhttp = new XMLHttpRequest();
-    let sttring=placedthingsstring.toString();
+    let xmlhttp = new XMLHttpRequest();
+    let sttring = placedthingsstring.toString();
     console.log("below is the sended string");
     console.log(sttring);
     console.log("\nstring end");
     xmlhttp.onload = function () {
-        console.log(this.responseText);
-        //todo confirm that save was succesfull
+        console.log(this.responseText+" placed");
     }
-    xmlhttp.open("POST", 'usermanager.php?dataupdate='+sttring);
+    xmlhttp.open("POST", 'usermanager.php?dataupdate=' + sttring);
+    xmlhttp.send(sttring);
+    xmlhttp = new XMLHttpRequest();
+    let tempbar = [];
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 10; j++) {
+            if (quickbar[i][j] instanceof Thing) {
+                tempbar.push(quickbar[i][j].image);
+                quickbar[i][j].image = "";
+            }
+        }
+    }
+    sttring = JSON.stringify(quickbar);
+    console.log("below is the sended string");
+    console.log(sttring);
+    console.log("\nstring end");
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 10; j++) {
+            if (quickbar[i][j] instanceof Thing) {
+                quickbar[i][j].image = tempbar[i * 10 + j];
+            }
+        }
+    }
+    xmlhttp.onload = function () {
+        console.log(this.responseText);
+    }
+    xmlhttp.open("POST", 'usermanager.php?playerid=' + playerid + "&xpos=" + xxx + "&ypos=" + yyy);
     xmlhttp.send(sttring);
 }
 
@@ -793,10 +818,10 @@ function involvedchunks() {
     let maxcpy = floor(bottomborder / chunksize);
     let maxcpx = floor(rightborder / chunksize);
     let mincpx = floor(leftborder / chunksize);
-    mincpy-=(1+renderdistance);
-    maxcpy+=(1+renderdistance);
-    mincpx-=(1+renderdistance);
-    maxcpx+=(1+renderdistance);
+    mincpy -= (1 + renderdistance);
+    maxcpy += (1 + renderdistance);
+    mincpx -= (1 + renderdistance);
+    maxcpx += (1 + renderdistance);
     //console.log(maxcpy + " " + maxcpx + " " + mincpy + " " + mincpx);
     erg = [];
     for (let i = mincpy; i <= maxcpy; i++) {

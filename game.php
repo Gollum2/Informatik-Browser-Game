@@ -83,6 +83,8 @@
 
     <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>-->
     <script> var masterseed=<?php echo $_SESSION["currentseed"] ?> </script>
+    <script> var playerid=<?php echo $_SESSION["id"] ?> </script>
+
     <script src="script.js"></script>
     <script src="p5/p5.js"></script>
  
